@@ -7,6 +7,12 @@
     <title>Webnesday 2023 - Event Driven Example</title>
 </head>
 <body>
+    <div class="flex">
+        <a-text
+            event-listener-name="one,two,three"
+        >no event received so far...</a-text>
+    </div>
+    <hr>
     <details open>
         <summary>Event: One to One</summary>
         <div class="flex">
@@ -99,6 +105,43 @@
             margin: 2em;
         }
     </style>
+    <script>
+        class Text extends HTMLElement {
+            constructor(...args) {
+                super(...args)
+
+                // attach shadow
+                this.attachShadow({ mode: 'open' })
+                // write css and html
+                this.shadowRoot.innerHTML = /* HTML */`
+                    <style>
+                        :host {
+                            display: block;
+                            width: 100%;
+                        }
+                        :host input {
+                            color: coral;
+                            padding: 1em;
+                            width: 100%;
+                        }
+                    </style>
+                    <input value="${this.innerHTML}"></input>
+                `
+                // event listeners
+                this.eventListener = event => this.input.setAttribute('value', `event received from: ${event.composedPath()[0].button.textContent}`)
+            }
+            connectedCallback(){
+                (this.getAttribute('event-listener-name')?.split(',') || ['event-listener-name']).forEach(name => document.body.addEventListener(name, this.eventListener))
+            }
+            disconnectedCallback(){
+                (this.getAttribute('event-listener-name')?.split(',') || ['event-listener-name']).forEach(name => document.body.removeEventListener(name, this.eventListener))
+            }
+            get input() {
+                return this.shadowRoot.querySelector('input')
+            }
+        }
+        self.customElements.define('a-text', Text)
+    </script>
     <script>
         class Button extends HTMLElement {
             constructor(...args) {
