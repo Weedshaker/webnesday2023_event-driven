@@ -8,11 +8,21 @@
 </head>
 <body>
     <details open>
-        <summary>Event: One to One</summary>
+        <summary>Event: Simple Regex</summary>
         <div class="flex">
             <a-button>Button Three</a-button>
             <a-button namespace="light-blue-">Button One</a-button>
             <a-button namespace="blue-">Button Two</a-button>
+        </div>
+    </details>
+    <details open>
+        <summary>Event: Migros Regex</summary>
+        <link href="./web-components-toolbox/src/css/colors.css" rel="stylesheet" type="text/css">
+        <link href="./web-components-toolbox/src/css/variables.css" rel="stylesheet" type="text/css">
+        <div class="flex">
+            <migros-button namespace="button-primary-">Button Primary</migros-button>
+            <migros-button namespace="button-secondary-">Button Secondary</migros-button>
+            <migros-button namespace="button-tertiary-" label="Button Tertiary"></migros-button>
         </div>
     </details>
     <style>
@@ -28,6 +38,9 @@
             gap: 1em;
             margin: 2em;
         }
+        /*:not(:defined) {
+            display: none;
+        }*/
     </style>
     <script>
         class Button extends HTMLElement {
