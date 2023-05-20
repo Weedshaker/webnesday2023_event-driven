@@ -4,98 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webnesday 2023 - Event Driven Example</title>
+    <title>Webnesday 2023 - Index</title>
 </head>
 <body>
     <div class="flex">
-        <a-text
-            event-listener-name="one,two,three"
-        >no event received so far...</a-text>
+        <a href="event-driven.html">Event Driven Example</a>
+        <a href="css-dom.html">CSS DOM Example</a>
     </div>
-    <hr>
-    <details open>
-        <summary>Event: One to One</summary>
-        <div class="flex">
-            <a-button
-                background-color="crimson"
-                event-animate-listener-name="two"
-                event-animate-dispatch-name="one"
-            >Button One listens to <span style="color:aliceblue">Two</span></a-button>
-            <a-button
-                background-color="aliceblue"
-                event-animate-listener-name="three"
-                event-animate-dispatch-name="two"
-            >Button Two listens to <span style="color:thistle">Three</span></a-button>
-            <a-button
-                background-color="thistle"
-                event-animate-listener-name="one"
-                event-animate-dispatch-name="three"
-            >Button Three listens to <span style="color:crimson">One</span></a-button>
-        </div>
-    </details>
-    <hr>
-    <details open>
-        <summary>Event: dispatch One and listens to Two</summary>
-        <div class="flex">
-            <a-button
-                background-color="crimson"
-                event-animate-listener-name="two,three"
-                event-animate-dispatch-name="one"
-            >Button One listens to <span style="color:aliceblue">Two</span> & <span style="color:thistle">Three</span></a-button>
-            <a-button
-                background-color="aliceblue"
-                event-animate-listener-name="three,one"
-                event-animate-dispatch-name="two"
-            >Button Two listens to <span style="color:thistle">Three</span> & <span style="color:crimson">One</span></a-button>
-            <a-button
-                background-color="thistle"
-                event-animate-listener-name="one,two"
-                event-animate-dispatch-name="three"
-            >Button Three listens to <span style="color:crimson">One</span> & <span style="color:aliceblue">Two</span></a-button>
-        </div>
-    </details>
-    <hr>
-    <details open>
-        <summary>Event: dispatch Two and listens to One</summary>
-        <div class="flex">
-            <a-button
-                background-color="crimson"
-                event-animate-listener-name="two"
-                event-animate-dispatch-name="one,three"
-            >Button One/Three listens to <span style="color:aliceblue">Two</span></a-button>
-            <a-button
-                background-color="aliceblue"
-                event-animate-listener-name="three"
-                event-animate-dispatch-name="two,one"
-            >Button Two/One listens to <span style="color:thistle">Three</span></a-button>
-            <a-button
-                background-color="thistle"
-                event-animate-listener-name="one"
-                event-animate-dispatch-name="three,two"
-            >Button Three/Two listens to <span style="color:crimson">One</span></a-button>
-        </div>
-    </details>
-    <hr>
-    <details open>
-        <summary>Event: dispatch All and listens to All</summary>
-        <div class="flex">
-            <a-button
-                background-color="hotpink"
-                event-animate-listener-name="one,two,three"
-                event-animate-dispatch-name="one,two,three"
-            >Master-Button One/Two/Three listens to <span style="color:crimson">One</span>/<span style="color:aliceblue">Two</span>/<span style="color:thistle">Three</span></a-button>
-        </div>
-    </details>
-    <hr>
-    <details open>
-        <summary>Event: dispatch All and listens to None</summary>
-        <div class="flex">
-            <a-button
-                background-color="peru"
-                event-animate-dispatch-name="one,two,three"
-            >Master-Button One/Two/Three listens to no-one</a-button>
-        </div>
-    </details>
     <style>
         .flex {
             justify-content: center;
@@ -104,101 +19,21 @@
             gap: 1em;
             margin: 2em;
         }
+        .flex a {
+            color: coral;
+            background-color: azure;
+            border: 0.4em solid transparent;
+            border-radius: 1em;
+            padding: 1em;
+            transition: all .5s ease;
+        }
+        .flex a:hover {
+            color: azure;
+            background-color: coral;
+            border: 0.4em solid azure;
+            box-shadow: 0.1em 0.1em 1em azure;
+            transform: scale(1.07);
+        }
     </style>
-    <script>
-        class Text extends HTMLElement {
-            constructor(...args) {
-                super(...args)
-
-                // attach shadow
-                this.attachShadow({ mode: 'open' })
-                // write css and html
-                this.shadowRoot.innerHTML = /* HTML */`
-                    <style>
-                        :host {
-                            display: block;
-                            width: 100%;
-                        }
-                        :host input {
-                            color: coral;
-                            padding: 1em;
-                            width: 100%;
-                        }
-                    </style>
-                    <input value="${this.innerHTML}"></input>
-                `
-                // event listeners
-                this.eventListener = event => this.input.setAttribute('value', `event received from: ${event.composedPath()[0].button.textContent}`)
-            }
-            connectedCallback(){
-                (this.getAttribute('event-listener-name')?.split(',') || ['event-listener-name']).forEach(name => document.body.addEventListener(name, this.eventListener))
-            }
-            disconnectedCallback(){
-                (this.getAttribute('event-listener-name')?.split(',') || ['event-listener-name']).forEach(name => document.body.removeEventListener(name, this.eventListener))
-            }
-            get input() {
-                return this.shadowRoot.querySelector('input')
-            }
-        }
-        self.customElements.define('a-text', Text)
-    </script>
-    <script>
-        class Button extends HTMLElement {
-            constructor(...args) {
-                super(...args)
-
-                // attach shadow
-                this.attachShadow({ mode: 'open' })
-                // write css and html
-                this.shadowRoot.innerHTML = /* HTML */`
-                    <style>
-                        :host button {
-                            background-color: ${this.getAttribute('background-color') || 'lightgray'};
-                            border-color: black;
-                            border-radius: 1em;
-                            padding: 1em;
-                        }
-                        :host([animate]) button {
-                            animation: button-pulse 1s ease;
-                        }
-                        @keyframes button-pulse {
-                            0% {
-                                transform: scale(1)
-                            }
-                            30% {
-                                transform: scale(1.5)
-                            }
-                            100% {
-                                transform: scale(1)
-                            }
-                        }
-                    </style>
-                    <button>${this.innerHTML}</button>
-                `
-                // event listeners
-                this.clickListener = event => (this.getAttribute('event-animate-dispatch-name')?.split(',') || ['event-animate-dispatch-name']).forEach(name => this.dispatchEvent(new CustomEvent(name, {
-                    bubbles: true,
-                    cancelable: true,
-                    composed: true
-                })))
-                this.animationendListener = event => this.removeAttribute('animate')
-                this.eventAnimateListener = event => this.setAttribute('animate', 'true')
-            }
-            connectedCallback(){
-                this.addEventListener('click', this.clickListener)
-                this.button.addEventListener('animationend', this.animationendListener);
-                (this.getAttribute('event-animate-listener-name')?.split(',') || ['event-animate-listener-name']).forEach(name => document.body.addEventListener(name, this.eventAnimateListener))
-            }
-            disconnectedCallback(){
-                this.removeEventListener('click', this.clickListener)
-                this.button.removeEventListener('animationend', this.animationendListener);
-                (this.getAttribute('event-animate-listener-name')?.split(',') || ['event-animate-listener-name']).forEach(name => document.body.removeEventListener(name, this.eventAnimateListener))
-            }
-            get button() {
-                return this.shadowRoot.querySelector('button')
-            }
-        }
-        self.customElements.define('a-button', Button)
-    </script>
 </body>
 </html>
