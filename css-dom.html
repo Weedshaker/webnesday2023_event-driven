@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webnesday 2023 - CSS DOM Example</title>
+</head>
+<body>
+    <details open>
+        <summary>Event: One to One</summary>
+        <div class="flex">
+            <a-button>Button Three</a-button>
+            <a-button namespace="light-blue-">Button One</a-button>
+            <a-button namespace="blue-">Button Two</a-button>
+        </div>
+    </details>
+    <style>
+        :root {
+            --background-color: azure;
+            --light-blue-background-color: lightblue;
+            --blue-background-color: blue;
+        }
+        .flex {
+            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            margin: 2em;
+        }
+    </style>
+    <script>
+        class Button extends HTMLElement {
+            constructor(...args) {
+                super(...args)
+
+                // attach shadow
+                this.attachShadow({ mode: 'open' })
+                // write css and html
+                this.shadowRoot.innerHTML = /* HTML */`
+                    <style>
+                        :host button {
+                            background-color: var(--background-color);
+                            border-color: black;
+                            border-radius: 1em;
+                            padding: 1em;
+                        }
+                        :host button:hover {
+                            cursor: pointer;
+                        }
+                    </style>
+                    <button>${this.innerHTML}</button>
+                `.replace(/--/g, `--${this.getAttribute('namespace') || ''}`)
+            }
+        }
+        self.customElements.define('a-button', Button)
+        import('./web-components-toolbox/src/es/components/atoms/button/Button.js').then(button => self.customElements.define('migros-button', button.default))
+    </script>
+</body>
+</html>
